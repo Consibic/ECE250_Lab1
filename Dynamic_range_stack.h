@@ -165,20 +165,20 @@ void Dynamic_range_stack::push( int const &obj )
         delete [] temp_array_min;
     }
     stack_array[entry_count] = obj;
-    entry_count++;
+    entry_count += 1;
     if(entry_count == 1){
         maximum_array[max_count] = obj;
-        max_count++;
+        max_count += 1;
         minimum_array[min_count] = obj;
-        min_count++;
+        min_count += 1;
     }else{
         if(obj >= maximum()){
             maximum_array[max_count] = obj;
-            max_count++;
+            max_count += 1;
         }
         if(obj <= minimum()){
             minimum_array[min_count] = obj;
-            min_count++;
+            min_count += 1;
         }
     }
     return;
@@ -191,12 +191,12 @@ int Dynamic_range_stack::pop()
         throw ex;
     }
     int entry = stack_array[entry_count-1];
-    entry_count--;
+    entry_count -= 1;
     if(entry == maximum_array[max_count-1]){
-        max_count--;
+        max_count -= 1;
     }
 	if(entry == minimum_array[min_count-1]){
-		min_count--;
+		min_count -= 1;
 	}
     return entry;
 }
