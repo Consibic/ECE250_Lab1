@@ -32,7 +32,6 @@
 
 #include <algorithm>
 #include "Exception.h"
-using namespace std;
 
 class Dynamic_range_stack
 {
@@ -145,27 +144,42 @@ void Dynamic_range_stack::push( int const &obj )
     if(entry_count >= current_capacity)
     {
         current_capacity *= 2;
+        /*Create temporary arrays to relocate data, and delete original array for size extending*/
         int *temp_array_stack = new int[current_capacity];
         int *temp_array_max = new int[current_capacity];
         int *temp_array_min = new int[current_capacity];
-        copy(stack_array, stack_array + entry_count, temp_array_stack);
-        copy(maximum_array, maximum_array + max_count, temp_array_max);
-        copy(minimum_array, minimum_array + min_count, temp_array_min);
+        for(int i = 0; i < entry_count; i++){
+            temp_array_stack[i] = stack_array[i];
+        }
+        for(int i = 0; i < max_count; i++){
+            temp_array_max[i] = maximum_array[i];
+        }
+        for(int i = 0; i < min_count; i++){
+            temp_array_min[i] = minimum_array[i];
+        }
         delete [] stack_array;
         delete [] maximum_array;
         delete [] minimum_array;
+        /*Re-initialize original array by using extended size*/
         stack_array = new int[current_capacity];
         maximum_array = new int[current_capacity];
         minimum_array = new int[current_capacity];
-        copy(temp_array_stack, temp_array_stack + entry_count, stack_array);
-        copy(temp_array_max, temp_array_max + max_count, maximum_array);
-        copy(temp_array_min, temp_array_min + min_count, minimum_array);
+        for(int i = 0; i < entry_count; i++){
+            stack_array[i] = temp_array_stack[i];
+        }
+        for(int i = 0; i < max_count; i++){
+            maximum_array[i] = temp_array_max[i];
+        }
+        for(int i = 0; i < min_count; i++){
+            minimum_array[i] = temp_array_min[i];
+        }
         delete [] temp_array_stack;
         delete [] temp_array_max;
         delete [] temp_array_min;
     }
-    stack_array[entry_count] = obj;
+    stack_array[entry_count] = obj; //push data
     entry_count += 1;
+    /*Set default max and min values as the first integer in stack*/
     if(entry_count == 1){
         maximum_array[max_count] = obj;
         max_count += 1;
@@ -173,11 +187,11 @@ void Dynamic_range_stack::push( int const &obj )
         min_count += 1;
     }else{
         if(obj >= maximum()){
-            maximum_array[max_count] = obj;
+            maximum_array[max_count] = obj; //check maximum
             max_count += 1;
         }
         if(obj <= minimum()){
-            minimum_array[min_count] = obj;
+            minimum_array[min_count] = obj; //check minimum
             min_count += 1;
         }
     }
@@ -190,13 +204,13 @@ int Dynamic_range_stack::pop()
         underflow ex;
         throw ex;
     }
-    int entry = stack_array[entry_count-1];
+    int entry = stack_array[entry_count-1]; //pop data
     entry_count -= 1;
     if(entry == maximum_array[max_count-1]){
-        max_count -= 1;
+        max_count -= 1; //pop maximum number if needed
     }
 	if(entry == minimum_array[min_count-1]){
-		min_count -= 1;
+		min_count -= 1; //pop minimum number if needed
 	}
     return entry;
 }
@@ -209,7 +223,7 @@ void Dynamic_range_stack::clear()
     delete [] stack_array;
     delete [] maximum_array;
     delete [] minimum_array;
-    stack_array = new int[initial_capacity];
+    stack_array = new int[initial_capacity]; //re-initialize arrays
     maximum_array = new int[initial_capacity];
     minimum_array = new int[initial_capacity];
     current_capacity = initial_capacity;
