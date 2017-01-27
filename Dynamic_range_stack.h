@@ -20,7 +20,7 @@
  *
  * The following is a list of uWaterloo User IDs of those students
  * who helped me with this project (describe their help; e.g., debugging):
- *    -
+ *    z464zhan
  *****************************************/
 
 #ifndef DYNAMIC_STACK_AS_ARRAY_H
